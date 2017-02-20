@@ -1,0 +1,13 @@
+{
+  "name": "xible-nodepack-mongodb",
+  "version": "0.0.1",
+  "description": "Set of mongodb nodes for Xible",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spectrumbroad/xible-nodepack-mongodb"
+  },
+  "dependencies": {
+    "mongodb": "*"
+  }
+}
