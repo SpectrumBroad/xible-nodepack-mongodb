@@ -1,6 +1,6 @@
 {
   "name": "xible-nodepack-mongodb",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Set of mongodb nodes for Xible",
   "license": "MIT",
   "repository": {
