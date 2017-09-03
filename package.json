@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/spectrumbroad/xible-nodepack-mongodb"
   },
+  "scripts": {
+    "prepublishOnly": "npm shrinkwrap --only=prod"
+  },
   "dependencies": {
     "mongodb": "*"
   }
