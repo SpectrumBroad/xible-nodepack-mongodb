@@ -1,85 +1,70 @@
+'use strict';
+
 const mongoDb = require('mongodb');
+
 const mongoClient = mongoDb.MongoClient;
 
-module.exports = function(NODE) {
+module.exports = (NODE) => {
+  let db;
 
-	let db;
+  const mongoOut = NODE.getOutputByName('mongodb');
+  mongoOut.on('trigger', (conn, state, callback) => {
+    if (!db) {
+      NODE.once('connected', () => callback(db));
+      return;
+    }
 
-	let mongoOut = NODE.getOutputByName('mongodb');
-	mongoOut.on('trigger', (conn, state, callback) => {
+    callback(db);
+  });
 
-		if (!db) {
+  NODE.on('init', () => {
+    mongoClient.connect(`mongodb://${NODE.data.hostname}:${NODE.data.port}/${NODE.data.database}`, (err, connDb) => {
+      if (err) {
+        NODE.addStatus({
+          message: 'disconnected',
+          color: 'red'
+        });
 
-			NODE.once('connected', () => callback(db));
-			return;
+        return;
+      }
 
-		}
+      NODE.addStatus({
+        message: 'connected',
+        color: 'green'
+      });
 
-		callback(db);
+      db = connDb;
+      NODE.emit('connected');
 
-	});
+      db.on('error', (dbErr) => {
+        NODE.setTracker({
+          message: dbErr.toString(),
+          color: 'red',
+          timeout: 3000
+        });
 
-	NODE.on('init', () => {
+        NODE.removeAllStatuses();
+        NODE.addStatus({
+          message: 'disconnected',
+          color: 'red'
+        });
+      });
 
-		mongoClient.connect(`mongodb://${NODE.data.hostname}:${NODE.data.port}/${NODE.data.database}`, function onMongoConnection(err, connDb) {
+      db.on('close', (dbCloseErr) => {
+        if (dbCloseErr) {
+          NODE.setTracker({
+            message: dbCloseErr.toString(),
+            color: 'red',
+            timeout: 3000
+          });
+        }
 
-			if (err) {
-
-				NODE.addStatus({
-					message: `disconnected`,
-					color: 'red'
-				});
-
-				return;
-
-			}
-
-			NODE.addStatus({
-				message: `connected`,
-				color: 'green'
-			});
-
-			db = connDb;
-			NODE.emit('connected');
-
-			db.on('error', (err) => {
-
-				NODE.setTracker({
-					message: err.toString(),
-					color: 'red',
-					timeout: 3000
-				});
-
-				NODE.removeAllStatuses();
-				NODE.addStatus({
-					message: `disconnected`,
-					color: 'red'
-				});
-
-			});
-
-			db.on('close', (err) => {
-
-				if (err) {
-
-					NODE.setTracker({
-						message: err.toString(),
-						color: 'red',
-						timeout: 3000
-					});
-
-				}
-
-				NODE.removeAllStatuses();
-				NODE.addStatus({
-					message: `disconnected`,
-					color: 'red'
-				});
-
-			});
-
-		});
-
-	});
-
+        NODE.removeAllStatuses();
+        NODE.addStatus({
+          message: 'disconnected',
+          color: 'red'
+        });
+      });
+    });
+  });
 };

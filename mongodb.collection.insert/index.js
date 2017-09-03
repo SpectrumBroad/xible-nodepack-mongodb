@@ -1,27 +1,21 @@
-module.exports = function(NODE) {
+'use strict';
 
-	let triggerIn = NODE.getInputByName('trigger');
-	let collectionIn = NODE.getInputByName('collection');
-	let documentIn = NODE.getInputByName('document');
+module.exports = (NODE) => {
+  const triggerIn = NODE.getInputByName('trigger');
+  const collectionIn = NODE.getInputByName('collection');
+  const documentIn = NODE.getInputByName('document');
 
-	let doneOut = NODE.getOutputByName('done');
+  const doneOut = NODE.getOutputByName('done');
 
-	triggerIn.on('trigger', (conn, state) => {
+  triggerIn.on('trigger', (conn, state) => {
+    if (!collectionIn.isConnected() || !documentIn.isConnected()) {
+      return;
+    }
 
-		if (!collectionIn.isConnected() || !documentIn.isConnected()) {
-			return;
-		}
-
-		Promise.all([collectionIn.getValues(state), documentIn.getValues(state)])
-			.then(([collections, documents]) => {
-
-				//loop the collections and insert
-				return Promise.all(collections.map((collection) => {
-					return collection.insertMany(documents);
-				}));
-
-			}).then(() => doneOut.trigger(state));
-
-	});
-
+    Promise.all([collectionIn.getValues(state), documentIn.getValues(state)])
+    .then(([collections, documents]) =>
+      // loop the collections and insert
+      Promise.all(collections.map(collection => collection.insertMany(documents)))
+    ).then(() => doneOut.trigger(state));
+  });
 };

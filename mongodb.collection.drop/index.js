@@ -1,36 +1,28 @@
-module.exports = function(NODE) {
+'use strict';
 
-	let triggerIn = NODE.getInputByName('trigger');
-	let collectionIn = NODE.getInputByName('collection');
+module.exports = (NODE) => {
+  const triggerIn = NODE.getInputByName('trigger');
+  const collectionIn = NODE.getInputByName('collection');
 
-	let doneOut = NODE.getOutputByName('done');
+  const doneOut = NODE.getOutputByName('done');
 
-	triggerIn.on('trigger', (conn, state) => {
+  triggerIn.on('trigger', (conn, state) => {
+    if (!collectionIn.isConnected()) {
+      return;
+    }
 
-		if (!collectionIn.isConnected()) {
-			return;
-		}
-
-		collectionIn.getValues(state)
-			.then((collections) => {
-
-				//loop the collections and insert
-				return Promise.all(collections.map((collection) => {
-					return collection.drop();
-				}));
-
-			})
-			.then(() => doneOut.trigger(state))
-			.catch((err) => {
-
-				NODE.addStatus({
-					message: '' + err,
-					timeout: 5000,
-					color: 'red'
-				});
-
-			});
-
-	});
-
+    collectionIn.getValues(state)
+    .then(collections =>
+      // loop the collections and insert
+      Promise.all(collections.map(collection => collection.drop()))
+    )
+    .then(() => doneOut.trigger(state))
+    .catch((err) => {
+      NODE.addStatus({
+        message: `${err}`,
+        timeout: 5000,
+        color: 'red'
+      });
+    });
+  });
 };
