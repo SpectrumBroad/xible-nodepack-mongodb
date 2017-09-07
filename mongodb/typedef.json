@@ -1,0 +1,10 @@
+{
+  "mongodb": {
+    "color": "springgreen",
+    "extends": "object"
+  },
+  "mongodb.document": {
+    "color": "green",
+    "extends": "object"
+  }
+}

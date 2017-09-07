@@ -1,0 +1,6 @@
+{
+  "mongodb.collection": {
+    "color": "darkseagreen",
+    "extends": "object"
+  }
+}

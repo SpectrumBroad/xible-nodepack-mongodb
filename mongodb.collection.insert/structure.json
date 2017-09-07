@@ -10,7 +10,7 @@
       "type": "mongodb.collection"
     },
     "document": {
-      "type": "document"
+      "type": "object"
     }
   },
   "outputs": {

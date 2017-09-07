@@ -12,7 +12,7 @@
       "type": "mongodb.collection"
     },
     "documents": {
-      "type": "document"
+      "type": "mongodb.document"
     }
   }
 }
