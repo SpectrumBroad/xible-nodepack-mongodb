@@ -1,12 +1,12 @@
 {
   "name": "mongodb.collection.drop",
   "type": "action",
-  "description": "Drop a collection from MongoDb",
+  "description": "Drop one or more collections.",
   "inputs": {
     "trigger": {
   		"type": "trigger"
   	},
-    "collection": {
+    "collections": {
       "type": "mongodb.collection"
     }
   },

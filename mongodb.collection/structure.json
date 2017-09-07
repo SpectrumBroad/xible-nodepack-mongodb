@@ -1,14 +1,14 @@
 {
   "name": "mongodb.collection",
   "type": "object",
-  "description": "A reference to a MongoDB collection.",
+  "description": "A reference to a MongoDB collection, potentially referencing multiple MongoDB's with an equally named collection.",
   "inputs": {
-    "mongodb": {
+    "mongodbs": {
   		"type": "mongodb"
   	}
   },
   "outputs": {
-    "collection": {
+    "collections": {
       "type": "mongodb.collection"
     },
     "documents": {

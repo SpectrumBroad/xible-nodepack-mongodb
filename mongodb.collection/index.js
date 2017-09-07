@@ -1,30 +1,33 @@
 'use strict';
 
 module.exports = (NODE) => {
-  const mongoIn = NODE.getInputByName('mongodb');
+  const mongosIn = NODE.getInputByName('mongodbs');
 
-  const collectionOut = NODE.getOutputByName('collection');
+  const collectionsOut = NODE.getOutputByName('collections');
   const docsOut = NODE.getOutputByName('documents');
 
-  collectionOut.on('trigger', (conn, state, callback) => {
-    if (!mongoIn.isConnected()) {
+  collectionsOut.on('trigger', (conn, state, callback) => {
+    if (!mongosIn.isConnected()) {
       return;
     }
 
-    mongoIn.getValues(state).then((mongos) => {
+    mongosIn.getValues(state)
+    .then((mongos) => {
       callback(mongos.map(mongo => mongo.collection(NODE.data.collectionName)));
     });
   });
 
   docsOut.on('trigger', (conn, state, callback) => {
-    if (!mongoIn.isConnected()) {
+    if (!mongosIn.isConnected()) {
       return;
     }
 
-    mongoIn.getValues(state).then((mongos) => {
+    mongosIn.getValues(state)
+    .then((mongos) => {
       Promise.all(
         mongos.map(mongo => mongo.collection(NODE.data.collectionName).find().toArray())
-      ).then((arrs) => {
+      )
+      .then((arrs) => {
         callback([].concat(...arrs));
       });
     });

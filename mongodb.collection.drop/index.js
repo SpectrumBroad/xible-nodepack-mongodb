@@ -2,16 +2,16 @@
 
 module.exports = (NODE) => {
   const triggerIn = NODE.getInputByName('trigger');
-  const collectionIn = NODE.getInputByName('collection');
+  const collectionsIn = NODE.getInputByName('collections');
 
   const doneOut = NODE.getOutputByName('done');
 
   triggerIn.on('trigger', (conn, state) => {
-    if (!collectionIn.isConnected()) {
+    if (!collectionsIn.isConnected()) {
       return;
     }
 
-    collectionIn.getValues(state)
+    collectionsIn.getValues(state)
     .then(collections =>
       // loop the collections and insert
       Promise.all(collections.map(collection => collection.drop()))

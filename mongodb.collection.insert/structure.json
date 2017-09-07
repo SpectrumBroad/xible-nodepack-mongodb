@@ -1,15 +1,15 @@
 {
   "name": "mongodb.collection.insert",
   "type": "action",
-  "description": "Inserts documents into a MongoDb collection",
+  "description": "Insert one or more documents into one or more MongoDb collections.",
   "inputs": {
     "trigger": {
       "type": "trigger"
     },
-    "collection": {
+    "collections": {
       "type": "mongodb.collection"
     },
-    "document": {
+    "documents": {
       "type": "object"
     }
   },
