@@ -1,12 +1,22 @@
 {
   "name": "xible-nodepack-mongodb",
   "version": "0.2.0",
-  "description": "Set of mongodb nodes for Xible",
+  "description": "Set of mongodb nodes for XIBLE.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/spectrumbroad/xible-nodepack-mongodb"
   },
+  "bugs": {
+    "url": "https://github.com/spectrumbroad/xible-nodepack-mongodb/issues",
+    "email": "bugs@xible.io"
+  },
+  "keywords": [
+    "xible",
+    "mongodb",
+    "mongo",
+    "nodepack"
+  ],
   "scripts": {
     "prepublishOnly": "npm shrinkwrap --only=prod"
   },
