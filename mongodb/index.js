@@ -18,7 +18,7 @@ module.exports = (NODE) => {
   });
 
   NODE.on('init', () => {
-    mongoClient.connect(`mongodb://${NODE.data.hostname}:${NODE.data.port}/${NODE.data.database}`, (err, connDb) => {
+    mongoClient.connect(`mongodb://${NODE.data.hostname}:${NODE.data.port}/${NODE.data.database}`, (err, client) => {
       if (err) {
         NODE.addStatus({
           message: 'disconnected',
@@ -33,7 +33,7 @@ module.exports = (NODE) => {
         color: 'green'
       });
 
-      db = connDb;
+      db = client.db(NODE.data.database);
       NODE.emit('connected');
 
       db.on('error', (dbErr) => {
