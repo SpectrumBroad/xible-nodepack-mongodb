@@ -17,9 +17,18 @@ module.exports = (NODE) => {
     callback(db);
   });
 
-  NODE.on('init', () => {
-    mongoClient.connect(`mongodb://${NODE.data.hostname}:${NODE.data.port}/${NODE.data.database}`, (err, client) => {
+  NODE.on('init', (state) => {
+    let credentials = '';
+    if (NODE.data.username && NODE.data.password) {
+      credentials = `${encodeURIComponent(NODE.data.username)}:${encodeURIComponent(NODE.data.password)}@`;
+    }
+
+    mongoClient.connect(`mongodb://${credentials}${NODE.data.hostname}:${NODE.data.port}/${NODE.data.database}`, {
+      useNewUrlParser: true
+    }, (err, client) => {
       if (err) {
+        NODE.error(err, state);
+
         NODE.addStatus({
           message: 'disconnected',
           color: 'red'
@@ -37,11 +46,7 @@ module.exports = (NODE) => {
       NODE.emit('connected');
 
       db.on('error', (dbErr) => {
-        NODE.setTracker({
-          message: dbErr.toString(),
-          color: 'red',
-          timeout: 3000
-        });
+        NODE.error(dbErr, state);
 
         NODE.removeAllStatuses();
         NODE.addStatus({
